@@ -23,7 +23,7 @@ def ist_strasse(hand):
 def ist_paar(hand):
     werte_in_hand = [wert for farbe, wert in hand]
     for wert in set(werte_in_hand):
-        if werte_in_hand.count(wert) >= 2:
+        if werte_in_hand.count(wert) == 2:
             return True
     return False
 
@@ -31,10 +31,10 @@ def ist_paar(hand):
 def sind_zwei_paare(hand):
     werte_in_hand = [wert for farbe, wert in hand]
     for wert in set(werte_in_hand):
-        if werte_in_hand.count(wert) >= 2:
+        if werte_in_hand.count(wert) == 2:
             andere_werte = set(werte_in_hand) - {wert}
             for anderer_wert in andere_werte:
-                if werte_in_hand.count(anderer_wert) >= 2:
+                if werte_in_hand.count(anderer_wert) == 2:
                     return True
     return False
 
@@ -42,7 +42,7 @@ def sind_zwei_paare(hand):
 def ist_drilling(hand):
     werte_in_hand = [wert for farbe, wert in hand]
     for wert in set(werte_in_hand):
-        if werte_in_hand.count(wert) >= 3:
+        if werte_in_hand.count(wert) == 3:
             return True
     return False
 
@@ -50,7 +50,7 @@ def ist_drilling(hand):
 def ist_vierling(hand):
     werte_in_hand = [wert for farbe, wert in hand]
     for wert in set(werte_in_hand):
-        if werte_in_hand.count(wert) >= 4:
+        if werte_in_hand.count(wert) == 4:
             return True
     return False
 
@@ -70,35 +70,20 @@ def karten_geben(karten):
     hand = random.choices(deck, k=karten)
     for karte in hand:
         print(f"{karte[0]} {karte[1]}")
-    if ist_paar(hand):
-        ergebnisse["Paar"] += 1
-    if sind_zwei_paare(hand):
-        ergebnisse["Zwei Paare"] += 1
-    if ist_drilling(hand):
-        ergebnisse["Drilling"] += 1
-    if ist_vierling(hand):
-        ergebnisse["Vierling"] += 1
     if ist_full_house(hand):
         ergebnisse["Full House"] += 1
-    if ist_flush(hand):
-        ergebnisse["Flush"] += 1
-    if ist_strasse(hand):
+    elif ist_vierling(hand):
+        ergebnisse["Vierling"] += 1
+    elif ist_strasse(hand):
         ergebnisse["Strasse"] += 1
-    # print(" ")
-    # print("Paar:", ist_paar(hand))
-    # print(" ")
-    # print("Zwei Paare:", sind_zwei_paare(hand))
-    # print(" ")
-    # print("Drilling:", ist_drilling(hand))
-    # print(" ")
-    # print("Vierling:", ist_vierling(hand))
-    # print(" ")
-    # print("Full House:", ist_full_house(hand))
-    # print(" ")
-    # print("Flush:", ist_flush(hand))
-    # print(" ")
-    # print("Strasse:", ist_strasse(hand))
-    # print(" ")
+    elif ist_flush(hand):
+        ergebnisse["Flush"] += 1
+    elif ist_drilling(hand):
+        ergebnisse["Drilling"] += 1
+    elif sind_zwei_paare(hand):
+        ergebnisse["Zwei Paare"] += 1
+    elif ist_paar(hand):
+        ergebnisse["Paar"] += 1
 
 
 if __name__ == '__main__':
@@ -121,4 +106,4 @@ if __name__ == '__main__':
 
     for key, value in ergebnisse.items():
         prozentsatz = (value / gesamtkombinationen) * 100
-        print(f"{key}: {prozentsatz:.2f}%")
+        print(f"{key}: {prozentsatz:.4f}%")
