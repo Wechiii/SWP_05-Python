@@ -20,6 +20,15 @@ def ist_strasse(hand):
     return True
 
 
+def ist_straight_flush(hand):
+    return ist_strasse(hand) and ist_flush(hand)
+
+
+def ist_royal_flush(hand):
+    royal_werte = ["10", "Bube", "Dame", "König", "Ass"]
+    return ist_straight_flush(hand) and set([wert for farbe, wert in hand]) == set(royal_werte)
+
+
 def ist_paar(hand):
     werte_in_hand = [wert for farbe, wert in hand]
     for wert in set(werte_in_hand):
@@ -66,28 +75,33 @@ def ist_full_house(hand):
     return False
 
 
-def karten_geben(karten):
+def karten_geben(karten, ergebnis):
     hand = random.choices(deck, k=karten)
     for karte in hand:
         print(f"{karte[0]} {karte[1]}")
-    if ist_full_house(hand):
-        ergebnisse["Full House"] += 1
+
+    if ist_royal_flush(hand):
+        ergebnis["Royale_Flush"] += 1
+    elif ist_straight_flush(hand):
+        ergebnis["Straight_Flush"] += 1
     elif ist_vierling(hand):
-        ergebnisse["Vierling"] += 1
-    elif ist_strasse(hand):
-        ergebnisse["Strasse"] += 1
+        ergebnis["Vierling"] += 1
+    elif ist_full_house(hand):
+        ergebnis["Full House"] += 1
     elif ist_flush(hand):
-        ergebnisse["Flush"] += 1
+        ergebnis["Flush"] += 1
+    elif ist_strasse(hand):
+        ergebnis["Strasse"] += 1
     elif ist_drilling(hand):
-        ergebnisse["Drilling"] += 1
+        ergebnis["Drilling"] += 1
     elif sind_zwei_paare(hand):
-        ergebnisse["Zwei Paare"] += 1
+        ergebnis["Zwei Paare"] += 1
     elif ist_paar(hand):
-        ergebnisse["Paar"] += 1
+        ergebnis["Paar"] += 1
 
 
-if __name__ == '__main__':
-    spiele = 100000
+def statistic(anz_spiele):
+    spiele = anz_spiele
 
     ergebnisse = {
         "Paar": 0,
@@ -96,14 +110,18 @@ if __name__ == '__main__':
         "Vierling": 0,
         "Full House": 0,
         "Flush": 0,
+        "Straight_Flush": 0,
+        "Royale_Flush": 0,
         "Strasse": 0
     }
 
     for _ in range(spiele):
-        karten_geben(5)
-
-    gesamtkombinationen = spiele
+        karten_geben(5, ergebnisse)
 
     for key, value in ergebnisse.items():
-        prozentsatz = (value / gesamtkombinationen) * 100
-        print(f"{key}: {prozentsatz:.4f}%")
+        prozentsatz = (value / anz_spiele) * 100
+        print(f"{key}: {prozentsatz:.6f} %")
+
+
+if __name__ == '__main__':
+    statistic(1000000)
