@@ -6,29 +6,6 @@ werte = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Bube", "Dame", "König",
 deck = [(farbe, wert) for farbe in farben for wert in werte]
 
 
-def ist_flush(hand):
-    symbole = [karte[0] for karte in hand]
-    return len(set(symbole)) == 1
-
-
-def ist_strasse(hand):
-    werte_in_hand = [wert for farbe, wert in hand]
-    sortierte_werte = sorted(werte_in_hand, key=lambda x: werte.index(x))
-    for i in range(len(sortierte_werte) - 1):
-        if werte.index(sortierte_werte[i]) + 1 != werte.index(sortierte_werte[i + 1]):
-            return False
-    return True
-
-
-def ist_straight_flush(hand):
-    return ist_strasse(hand) and ist_flush(hand)
-
-
-def ist_royal_flush(hand):
-    royal_werte = ["10", "Bube", "Dame", "König", "Ass"]
-    return ist_straight_flush(hand) and set([wert for farbe, wert in hand]) == set(royal_werte)
-
-
 def ist_paar(hand):
     werte_in_hand = [wert for farbe, wert in hand]
     for wert in set(werte_in_hand):
@@ -56,12 +33,18 @@ def ist_drilling(hand):
     return False
 
 
-def ist_vierling(hand):
+def ist_strasse(hand):
     werte_in_hand = [wert for farbe, wert in hand]
-    for wert in set(werte_in_hand):
-        if werte_in_hand.count(wert) == 4:
-            return True
-    return False
+    sortierte_werte = sorted(werte_in_hand, key=lambda x: werte.index(x))
+    for i in range(len(sortierte_werte) - 1):
+        if werte.index(sortierte_werte[i]) + 1 != werte.index(sortierte_werte[i + 1]):
+            return False
+    return True
+
+
+def ist_flush(hand):
+    symbole = [karte[0] for karte in hand]
+    return len(set(symbole)) == 1
 
 
 def ist_full_house(hand):
@@ -73,6 +56,23 @@ def ist_full_house(hand):
                 if werte_in_hand.count(anderer_wert) == 2:
                     return True
     return False
+
+
+def ist_vierling(hand):
+    werte_in_hand = [wert for farbe, wert in hand]
+    for wert in set(werte_in_hand):
+        if werte_in_hand.count(wert) == 4:
+            return True
+    return False
+
+
+def ist_straight_flush(hand):
+    return ist_strasse(hand) and ist_flush(hand)
+
+
+def ist_royal_flush(hand):
+    royal_werte = ["10", "Bube", "Dame", "König", "Ass"]
+    return ist_straight_flush(hand) and set([wert for farbe, wert in hand]) == set(royal_werte)
 
 
 def karten_geben(karten, ergebnis):
@@ -120,7 +120,7 @@ def statistic(anz_spiele):
 
     for key, value in ergebnisse.items():
         prozentsatz = (value / anz_spiele) * 100
-        print(f"{key}: {prozentsatz:.6f} %")
+        print(f"{key}: {prozentsatz:.4f} %")
 
 
 if __name__ == '__main__':
