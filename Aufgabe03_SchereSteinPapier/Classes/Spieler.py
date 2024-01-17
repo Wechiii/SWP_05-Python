@@ -7,7 +7,7 @@ class Spieler:
             try:
                 # Spielerwahl abfragen
                 option = int(input(
-                    f"{self.name}, bitte wähle eine Option: (1)Stein, (2)Papier, (3)Schere, (4)Echse, (5)Spock: "))
+                    f"{self.name}, bitte wähle eine Option: (1)Schere, (2)Stein, (3)Papier, (4)Echse, (5)Spock: "))
 
                 if option in range(1, 6):
                     return option
