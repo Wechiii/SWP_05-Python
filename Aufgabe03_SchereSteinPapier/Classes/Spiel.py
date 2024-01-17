@@ -27,15 +27,17 @@ class Spiel:
         self.lade_daten()
 
     def speichere_daten(self):
+        result = {str(k): v for k, v in self.symbol.items()}
+
         with open('../Data/spieldaten.json', 'w') as f:
-            json.dump({'symbol': self.symbol}, f)
+            json.dump({'symbol': result}, f)
 
     def lade_daten(self):
         try:
-            with open('spiel_data.json', 'r') as f:
+            with open('../Data/spieldaten.json', "r") as f:
                 data = json.load(f)
-                self.siege = data['siege']
-                self.symbol = data['symbol']
+                self.symbol = {int(k): v for k, v in data['symbol'].items()}
+            print(self.symbol)
         except FileNotFoundError:
             pass
 
@@ -102,9 +104,17 @@ class Spiel:
 
             self.kommentareDuo(gewinner)
 
+    def statistik(self):
+        with open('../Data/spieldaten.json', 'r') as f:
+            data = json.load(f)
+            self.symbol = data['symbol']
+        print(self.symbol)
+
     def main(self):
         spielmodus = input("Bitte Spielmodus (s)olo oder (d)uo angeben: ")
         while True:
+            self.lade_daten()
+
             self.spiel(spielmodus)
 
             self.speichere_daten()
