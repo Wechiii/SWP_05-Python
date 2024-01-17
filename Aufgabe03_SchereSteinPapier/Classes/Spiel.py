@@ -1,3 +1,5 @@
+import json
+
 from Spieler import Spieler
 from Computer import Computer
 
@@ -21,6 +23,21 @@ class Spiel:
 
         self.siege = {self.spieler.name: 0, self.computer.name: 0}
         self.symbol = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+
+        self.lade_daten()
+
+    def speichere_daten(self):
+        with open('../Data/spieldaten.json', 'w') as f:
+            json.dump({'symbol': self.symbol}, f)
+
+    def lade_daten(self):
+        try:
+            with open('spiel_data.json', 'r') as f:
+                data = json.load(f)
+                self.siege = data['siege']
+                self.symbol = data['symbol']
+        except FileNotFoundError:
+            pass
 
     def kommentareSolo(self, gewinner):
         if gewinner == 0:
@@ -89,6 +106,8 @@ class Spiel:
         spielmodus = input("Bitte Spielmodus (s)olo oder (d)uo angeben: ")
         while True:
             self.spiel(spielmodus)
+
+            self.speichere_daten()
 
             print(f"{self.spieler.name}'s Siege: {self.siege[self.spieler.name]}")
 
