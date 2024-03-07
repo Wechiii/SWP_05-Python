@@ -5,14 +5,14 @@ app = Flask(__name__)
 
 
 def setup_db():
-    connection = sqlite3.connect('SchereSteinPapierEchseSpock.db')
+    connection = sqlite3.connect('schereSteinPapierEchseSpock.db')
     cursor = connection.cursor()
 
     cursor.execute("CREATE TABLE IF NOT EXISTS counts (id INTEGER PRIMARY KEY AUTOINCREMENT, symbole TEXT, count TEXT)")
 
 
 def speichern(symbole):
-    connection = sqlite3.connect('SchereSteinPapier.db')
+    connection = sqlite3.connect('schereSteinPapierEchseSpock.db')
     cursor = connection.cursor()
 
     cursor.execute("INSERT INTO counts (symbole, count) VALUES ('{}','{}').format(symbole['symbol'], symbole['count'])")
