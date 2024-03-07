@@ -1,4 +1,7 @@
 import json
+import sqlite3
+
+from jsonref import requests
 
 from Spieler import Spieler
 from Computer import Computer
@@ -37,7 +40,7 @@ class Spiel:
             with open('../Data/spieldaten.json', "r") as f:
                 data = json.load(f)
                 self.symbol = {int(k): v for k, v in data['symbol'].items()}
-            print(self.symbol)
+            # print(self.symbol)
         except FileNotFoundError:
             pass
 
@@ -110,6 +113,10 @@ class Spiel:
             self.symbol = data['symbol']
         print(self.symbol)
 
+    def sqliteDb(symbole):
+        res = requests.post('http://127.0.0.1:5000/' + '/saveStats', json=symbole)
+        print(res.text)
+
     def main(self):
         spielmodus = input("Bitte Spielmodus (s)olo oder (d)uo angeben: ")
         while True:
@@ -119,6 +126,8 @@ class Spiel:
 
             self.speichere_daten()
 
+            print("-------------------------------------------------------------")
+
             print(f"{self.spieler.name}'s Siege: {self.siege[self.spieler.name]}")
 
             if spielmodus == "s":
@@ -127,9 +136,17 @@ class Spiel:
             if spielmodus == "d":
                 print(f"{self.spieler2.name}'s Siege: {self.siege[self.spieler2.name]}")
 
+            print("-------------------------------------------------------------")
+
             print("Symbol count:")
             for symbol, count in spiel.symbol.items():
                 print(f"{symbol}: {count}")
+
+            self.lade_daten()
+
+            #print(spiel.symbol[1])
+
+            self.sqliteDb(spiel.symbol.items())
 
             play_again = input("Noch eine Runde? (j)a: ")
             if play_again.lower() != "j":
